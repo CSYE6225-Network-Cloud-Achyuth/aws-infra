@@ -1,20 +1,28 @@
 resource "aws_launch_template" "launch_template" {
 
+  depends_on = [
+    aws_kms_key.ebs_key
+  ]
+
   name = "launch_template_csye"
 
 
   block_device_mappings {
-    device_name = "/dev/sdf"
+    device_name = "/dev/xvda"
 
     ebs {
       volume_size = 20
+      encrypted   = true
+      kms_key_id  = aws_kms_key.ebs_key.arn
     }
+
+
 
   }
 
   image_id = data.aws_ami.my_latest_ami.id
 
-#   key_name = "AWS_DEV_MACBOOK_PRO"
+  #   key_name = "AWS_DEV_MACBOOK_PRO"
 
   instance_type = "t2.micro"
 
@@ -35,4 +43,10 @@ resource "aws_launch_template" "launch_template" {
       s3_bucket        = aws_s3_bucket.my_s3_bucket.bucket
     }
   ))
+
+  tags = {
+    "Name" = "Created by Terraform"
+  }
+
+
 }

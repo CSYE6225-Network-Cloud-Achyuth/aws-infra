@@ -45,6 +45,8 @@ resource "aws_autoscaling_group" "auto-scaling-group" {
 
   # launch_configuration = aws_launch_configuration.auto_scaling_launch_configuration.name
 
+  name = "created_by_terraform"
+
   launch_template {
     id      = aws_launch_template.launch_template.id
     version = "$Latest"
@@ -62,14 +64,15 @@ resource "aws_autoscaling_group" "auto-scaling-group" {
     aws_subnet.public_3.id
   ]
 
-    # load_balancers = [
-    #   aws_lb.load_balancer.id
-    # ]
+  # load_balancers = [
+  #   aws_lb.load_balancer.id
+  # ]
 
   tag {
     key                 = "Name"
     value               = "CSYE6225-WebApp"
     propagate_at_launch = true
+
   }
 }
 
@@ -93,7 +96,7 @@ resource "aws_autoscaling_group" "auto-scaling-group" {
 
 #   # cooldown = 10
 
-  
+
 
 # }
 
