@@ -1,7 +1,7 @@
 
 resource "aws_lb" "load_balancer" {
 
-  name = "load-balancer-test"
+  name     = "load-balancer-test"
   internal = false
 
   load_balancer_type = "application"
@@ -31,7 +31,7 @@ resource "aws_lb_target_group" "target_group" {
   vpc_id = aws_vpc.main.id
 
   health_check {
-    enabled = true
+    enabled  = true
     path     = "/healthz"
     port     = 80
     interval = 300
@@ -41,10 +41,50 @@ resource "aws_lb_target_group" "target_group" {
 
 }
 
+# resource "aws_lb_target_group" "target_group_2" {
+
+#   name = "csye6225-target-group-https"
+
+#   port = 443
+
+#   protocol = "HTTP"
+
+#   vpc_id = aws_vpc.main.id
+
+#   health_check {
+#     enabled  = true
+#     path     = "/healthz"
+#     port     = 443
+#     interval = 300
+#     protocol = "HTTPS"
+#   }
+
+
+# }
+
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.load_balancer.arn
   port              = "80"
   protocol          = "HTTP"
+  default_action {
+    type = "forward"
+    forward {
+      target_group {
+        arn = aws_lb_target_group.target_group.arn
+      }
+      stickiness {
+        enabled  = true
+        duration = 28800
+      }
+    }
+  }
+}
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.load_balancer.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = data.aws_acm_certificate.latest_certificate.arn
   default_action {
     type = "forward"
     forward {
