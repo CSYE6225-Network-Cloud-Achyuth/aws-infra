@@ -113,13 +113,13 @@ resource "aws_security_group" "load_balancer_security_group" {
 
   vpc_id = aws_vpc.main.id
 
-  ingress {
-    description = "Http to EC2"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # ingress {
+  #   description = "Http to EC2"
+  #   from_port   = 80
+  #   to_port     = 80
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 
   ingress {
     description = "Https to EC2"
